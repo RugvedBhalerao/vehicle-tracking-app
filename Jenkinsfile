@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the code from GitHub
-                git credentialsId: 'github-token', url: 'https://github.com/RugvedBhalerao/vehicle-tracking-app.git'
+                git credentialsId: 'github-token', url: 'https://github.com/RugvedBhalerao/vehicle-tracking-app.git', branch: 'main'
             }
         }
 
