@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'rugved28/vehicle-tracking-app'  // Name of your Docker image in Docker Hub
+        IMAGE_TAG = "${DOCKER_IMAGE}:${BUILD_ID}"  // Tag image with build ID
     }
 
     stages {
@@ -17,7 +18,8 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the Dockerfile in the repo
-                    docker.build("${DOCKER_IMAGE}:${BUILD_ID}")
+                    echo "Building Docker image: ${IMAGE_TAG}"
+                    docker.build("${IMAGE_TAG}")
                 }
             }
         }
@@ -26,8 +28,9 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub and push the built image
+                    echo "Pushing Docker image: ${IMAGE_TAG} to Docker Hub"
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials') {
-                        docker.image("${DOCKER_IMAGE}:${BUILD_ID}").push()
+                        docker.image("${IMAGE_TAG}").push()
                     }
                 }
             }
@@ -37,7 +40,8 @@ pipeline {
     post {
         always {
             // Clean up Docker images from Jenkins after the job is finished
-            sh "docker rmi ${DOCKER_IMAGE}:${BUILD_ID}"
+            echo "Cleaning up Docker image: ${IMAGE_TAG}"
+            sh "docker rmi ${IMAGE_TAG}" // Remove image after push
         }
     }
 }
