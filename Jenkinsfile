@@ -15,14 +15,21 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build the Docker image using the Dockerfile in the repo
-                    echo "Building Docker image: ${IMAGE_TAG}"
-                    docker.build("${IMAGE_TAG}")
-                }
-            }
-        }
+    steps {
+        script {
+            try {
+                echo "Building Docker image: ${IMAGE_TAG}"
+                def image = docker.build("${IMAGE_TAG}")
+                echo "Docker image built successfully: ${image.id}" // Add more logging to verify the build
+				} catch (Exception e) {
+                currentBuild.result = 'FAILURE'
+                echo "Error building Docker image: ${e.getMessage()}"
+                throw e // Fail the build if the Docker build fails
+				}
+			}
+		}
+	}
+
 
         stage('Push Docker Image') {
             steps {
