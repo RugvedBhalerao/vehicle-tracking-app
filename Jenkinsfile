@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'rugved28/vehicle-tracking-app'  // Name of your Docker image in Docker Hub
-        IMAGE_TAG = "${DOCKER_IMAGE}:${BUILD_ID}"  // Tag image with build ID
+        IMAGE_TAG = "${DOCKER_IMAGE}:latest"  // Tag image with build ID
     }
 
     stages {
